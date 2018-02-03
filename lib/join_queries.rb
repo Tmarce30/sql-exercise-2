@@ -26,4 +26,15 @@ end
 
 def top_five_artists(db, genre_name)
   # TODO: return list of top 5 artists with the most songs for a given genre.
+  db.execute("
+    SELECT ar.name, COUNT(t.name) AS tracks_number
+    FROM tracks t
+    JOIN artists ar ON ar.id = al.artist_id
+    JOIN albums al ON al.id = t.album_id
+    JOIN genres g ON g.id = t.genre_id
+    WHERE g.name = '#{genre_name}'
+    GROUP BY ar.name
+    ORDER BY tracks_number DESC
+    LIMIT 5
+  ")
 end
